@@ -1,6 +1,7 @@
 import { InferGetServerSidePropsType } from 'next';
 import { Container } from 'react-bootstrap';
 
+import { i18n } from '../../models/Translation';
 import PageHead from '../../components/PageHead';
 import { MemberStatic } from '../../components/Member/Static';
 import membersStore from '../../models/Member';
@@ -17,7 +18,6 @@ export default function MembersPage({
   membersStaticData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { groupMap, otherGroupList } = membersStaticData;
-
   return (
     <Container className="my-4">
       <PageHead title="正式成员" />

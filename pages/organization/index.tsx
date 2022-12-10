@@ -2,7 +2,7 @@ import { isEmpty } from 'web-utility';
 import dynamic from 'next/dynamic';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { PureComponent } from 'react';
+import { FC, PureComponent } from 'react';
 import { Container, Badge, Button, Nav } from 'react-bootstrap';
 import { text2color } from 'idea-react';
 
@@ -11,7 +11,7 @@ import { OrganizationCardProps } from '../../components/Organization/Card';
 import { OrganizationList } from '../../components/Organization/List';
 import { CityStatisticMap } from '../../components/CityStatisticMap';
 
-import { isServer } from '../../models/Base';
+import { i18n } from '../../models/Translation';
 import organizationStore from '../../models/Organization';
 
 const OrganizationCharts = dynamic(
@@ -45,7 +45,8 @@ export class OpenSourceMap extends PureComponent {
   };
 
   renderFilter() {
-    const { filter, totalCount } = organizationStore;
+    const { t } = i18n,
+      { filter, totalCount } = organizationStore;
 
     return (
       !isEmpty(filter) && (
@@ -54,7 +55,7 @@ export class OpenSourceMap extends PureComponent {
           style={{ top: '5rem' }}
         >
           <div>
-            筛选
+            {t('filter')}
             {Object.entries(filter).map(([key, value]) => (
               <Badge
                 key={key}
@@ -65,13 +66,13 @@ export class OpenSourceMap extends PureComponent {
               </Badge>
             ))}
           </div>
-          共 {totalCount} 家
+          {t('altogether')} {totalCount} {t('companies')}
           <Button
             variant="warning"
             size="sm"
             onClick={() => this.switchFilter({})}
           >
-            重置
+            {t('reset')}
           </Button>
         </header>
       )
@@ -80,6 +81,7 @@ export class OpenSourceMap extends PureComponent {
 
   renderTab() {
     const { tabKey } = this,
+      { t } = i18n,
       { statistic } = organizationStore;
 
     return (
@@ -93,22 +95,20 @@ export class OpenSourceMap extends PureComponent {
           }
         >
           <Nav.Item>
-            <Nav.Link eventKey="map">地图</Nav.Link>
+            <Nav.Link eventKey="map">{t('map')}</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link eventKey="chart">图表</Nav.Link>
+            <Nav.Link eventKey="chart">{t('chart')}</Nav.Link>
           </Nav.Item>
         </Nav>
 
         {tabKey !== 'map' ? (
           <OrganizationCharts {...statistic} />
         ) : (
-          !isServer() && (
-            <CityStatisticMap
-              store={organizationStore}
-              onChange={city => this.switchFilter({ city })}
-            />
-          )
+          <CityStatisticMap
+            store={organizationStore}
+            onChange={city => this.switchFilter({ city })}
+          />
         )}
       </div>
     );
@@ -130,17 +130,19 @@ export class OpenSourceMap extends PureComponent {
   }
 }
 
-export default function OrganizationPage() {
+const OrganizationPage: FC = observer(() => {
+  const { t } = i18n;
+
   return (
     <>
-      <PageHead title="开源地图" />
+      <PageHead title={t('open_source_map')} />
 
       <Container>
         <header className="d-flex justify-content-between align-items-center">
-          <h1 className="my-4">中国开源地图</h1>
+          <h1 className="my-4">{t('china_open_source_map')}</h1>
           <div>
             <Button className="me-2" size="sm" href="/organization/landscape">
-              全景图
+              {t('panorama')}
             </Button>
             <Button
               variant="success"
@@ -148,7 +150,7 @@ export default function OrganizationPage() {
               target="_blank"
               href="https://kaiyuanshe.feishu.cn/share/base/shrcnPgQoUZzkpWB2W4dp2QQvbd"
             >
-              + 加入开源地图
+              {t('join_the_open_source_map')}
             </Button>
           </div>
         </header>
@@ -157,4 +159,6 @@ export default function OrganizationPage() {
       </Container>
     </>
   );
-}
+});
+
+export default OrganizationPage;
