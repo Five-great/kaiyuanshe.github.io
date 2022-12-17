@@ -1,3 +1,4 @@
+import { t } from 'i18next-mobx';
 import dynamic from 'next/dynamic';
 import { Container } from 'react-bootstrap';
 
@@ -11,9 +12,9 @@ const OrganizationLandscape = dynamic(
 export default function LandscapePage() {
   return (
     <Container className="mb-5">
-      <PageHead title="中国开源社区全景图" />
+      <PageHead title={t("panorama_of_china_open_source_community")}/>
 
-      <h2 className="mt-5 text-center">中国开源社区全景图</h2>
+      <h2 className="mt-5 text-center">{t("panorama_of_china_open_source_community")}</h2>
 
       <OrganizationLandscape />
     </Container>
