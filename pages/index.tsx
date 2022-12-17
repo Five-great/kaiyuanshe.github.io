@@ -2,6 +2,8 @@ import { InferGetServerSidePropsType } from 'next';
 import { Fragment, PureComponent } from 'react';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import { Icon } from 'idea-react';
+import { observer } from 'mobx-react';
+import { t } from "i18next-mobx"
 
 import PageHead from '../components/PageHead';
 import { ArticleListLayout } from '../components/Article/List';
@@ -26,6 +28,7 @@ export async function getServerSideProps() {
   };
 }
 
+@observer
 export default class HomePage extends PureComponent<
 InferGetServerSidePropsType<typeof getServerSideProps>
 > {
@@ -66,7 +69,7 @@ InferGetServerSidePropsType<typeof getServerSideProps>
           <section className="text-center">
             {slogan.map(({ title, items }) => (
               <Fragment key={title}>
-                <h2 className="my-5 text-primary">{title}</h2>
+                <h2 className="my-5 text-primary">{t(title)}</h2>
 
                 <Row
                   as="ul"
@@ -78,7 +81,7 @@ InferGetServerSidePropsType<typeof getServerSideProps>
                   {items.map(({ icon, text }) => (
                     <Col as="li" key={text}>
                       <Icon name={icon} size={6} />
-                      <div className="h3">{text}</div>
+                      <div className="h3">{t(text)}</div>
                     </Col>
                   ))}
                 </Row>
@@ -87,7 +90,7 @@ InferGetServerSidePropsType<typeof getServerSideProps>
           </section>
 
           <section className="text-center">
-            <h2 className="my-5 text-primary">自研开源项目</h2>
+            <h2 className="my-5 text-primary">{t("Self_developed_open_source_project")}</h2>
 
             <Row
               as="ul"
@@ -101,15 +104,15 @@ InferGetServerSidePropsType<typeof getServerSideProps>
           </section>
 
           <section>
-            <h2 className="text-center text-primary">最新动态</h2>
+            <h2 className="text-center text-primary">{t("latest_news")}</h2>
             <p className="text-center text-muted">
-              身体力行地践行开源，咱们华人有力量！
+              {t("slogan")}
             </p>
             <ArticleListLayout data={articles} />
           </section>
 
           <section>
-            <h2 className="my-5 text-center text-primary">活动地图</h2>
+            <h2 className="my-5 text-center text-primary">{t("activity_map")}</h2>
 
             {!isServer() && <CityStatisticMap store={activityStore} />}
           </section>

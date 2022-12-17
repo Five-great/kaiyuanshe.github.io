@@ -1,6 +1,8 @@
 import { buildURLData } from 'web-utility';
 import { InferGetServerSidePropsType } from 'next';
 import { Container, Row, Col } from 'react-bootstrap';
+import { observer } from 'mobx-react';
+import {t} from "i18next-mobx"
 
 import { ArticleListLayout } from '../../components/Article/List';
 import { ActivityListLayout } from '../../components/Activity/List';
@@ -12,6 +14,7 @@ import { client } from '../../models/Base';
 import { withRoute } from '../api/base';
 import { SearchResult } from '../api/search';
 
+
 export const getServerSideProps = withRoute<{}, SearchResult>(
   async ({ query }) => {
     const { body } = await client.get<SearchResult>(
@@ -21,7 +24,7 @@ export const getServerSideProps = withRoute<{}, SearchResult>(
   },
 );
 
-export default function SearchPage({
+export default observer(function SearchPage({
   activities,
   articles,
   members,
@@ -30,21 +33,21 @@ export default function SearchPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <Container className="my-5">
-      <h1 className="text-center">搜索结果</h1>
+    <h1 className="text-center">{t("search_results")}</h1>
 
-      <h2>文章</h2>
+      <h2>{t("article")}</h2>
 
       <ArticleListLayout data={articles} />
 
-      <h2>活动</h2>
+      <h2>{t("activity")}</h2>
 
       <ActivityListLayout data={activities} />
 
-      <h2>成员</h2>
+      <h2>{t("member")}</h2>
 
       <MemberList list={members} />
 
-      <h2>部门</h2>
+      <h2>{t("department")}</h2>
 
       <Row className="my-0 g-4" xs={1} sm={2} md={4}>
         {groups.map(group => (
@@ -54,9 +57,9 @@ export default function SearchPage({
         ))}
       </Row>
 
-      <h2>组织</h2>
+      <h2>{t("organization_short")}</h2>
 
       <OrganizationListLayout data={organizations} />
     </Container>
   );
-}
+})

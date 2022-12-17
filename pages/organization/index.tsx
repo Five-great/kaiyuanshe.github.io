@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { PureComponent } from 'react';
 import { Container, Badge, Button, Nav } from 'react-bootstrap';
 import { text2color } from 'idea-react';
+import {t} from "i18next-mobx"
 
 import PageHead from '../../components/PageHead';
 import { OrganizationCardProps } from '../../components/Organization/Card';
@@ -54,7 +55,7 @@ export class OpenSourceMap extends PureComponent {
           style={{ top: '5rem' }}
         >
           <div>
-            筛选
+            {t("filter")}
             {Object.entries(filter).map(([key, value]) => (
               <Badge
                 key={key}
@@ -65,13 +66,13 @@ export class OpenSourceMap extends PureComponent {
               </Badge>
             ))}
           </div>
-          共 {totalCount} 家
+          {t("totalCount_in_total",{totalCount: (""+totalCount)})}
           <Button
             variant="warning"
             size="sm"
             onClick={() => this.switchFilter({})}
           >
-            重置
+            {t("reset")}
           </Button>
         </header>
       )
@@ -93,10 +94,10 @@ export class OpenSourceMap extends PureComponent {
           }
         >
           <Nav.Item>
-            <Nav.Link eventKey="map">地图</Nav.Link>
+            <Nav.Link eventKey="map">{t("map")}</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link eventKey="chart">图表</Nav.Link>
+            <Nav.Link eventKey="chart">{t("chart")}</Nav.Link>
           </Nav.Item>
         </Nav>
 

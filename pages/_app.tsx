@@ -2,7 +2,9 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { Container, Row, Col } from 'react-bootstrap';
 import { Icon } from 'idea-react';
+import {withNextI18NextMobxApp} from "i18next-mobx/next"
 
+import "../models/i18next"
 import { MainRoutes } from '../components/data';
 import MainNav from '../components/MainNav';
 import '../styles/globals.less';
@@ -11,7 +13,7 @@ import { social } from './api/home';
 const Name = process.env.NEXT_PUBLIC_SITE_NAME!,
   Logo = process.env.NEXT_PUBLIC_SITE_LOGO!;
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
@@ -53,3 +55,4 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     </>
   );
 }
+export default withNextI18NextMobxApp((MyApp as any))

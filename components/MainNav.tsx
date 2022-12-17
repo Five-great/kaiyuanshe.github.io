@@ -4,6 +4,7 @@ import { Container, Image, Nav, Navbar } from 'react-bootstrap';
 
 import { SearchBar } from './SearchBar';
 import styles from '../styles/MainNav.module.less';
+import { I18nChangDropdown } from './I18nChangDropdown';
 
 export interface Link {
   path: string;
@@ -58,6 +59,7 @@ class MainNav extends PureComponent<MainNavProps> {
                   {title}
                 </Nav.Link>
               ))}
+              <I18nChangDropdown/>
             </Nav>
           </Navbar.Collapse>
         </Container>

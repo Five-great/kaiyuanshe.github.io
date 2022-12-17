@@ -11,6 +11,8 @@ import {
   InputGroup,
 } from 'react-bootstrap';
 import { TimeDistance, Avatar, FilePicker } from 'idea-react';
+import { t } from "i18next-mobx"
+import { observer } from 'mobx-react';
 
 import { TimeOption } from '../../components/data';
 import PageHead from '../../components/PageHead';
@@ -43,6 +45,7 @@ interface State {
   updating?: boolean;
 }
 
+@observer
 export default class UserProfilePage extends PureComponent<
   InferGetServerSidePropsType<typeof getServerSideProps>,
   State
@@ -96,7 +99,7 @@ export default class UserProfilePage extends PureComponent<
       >
         <Form.Group as={Row} className="mb-3" controlId="avatar">
           <Form.Label column sm="2">
-            头像
+            {t("head_portrait")}
           </Form.Label>
           <Col sm="10">
             {editing ? (

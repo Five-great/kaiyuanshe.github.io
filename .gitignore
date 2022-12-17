@@ -47,4 +47,4 @@ yarn-error.log*
 *.tsbuildinfo
 
 # IDE
-.vscode/settings.json
+# .vscode/settings.json
