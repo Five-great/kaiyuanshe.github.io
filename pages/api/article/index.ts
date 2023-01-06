@@ -6,7 +6,7 @@ import { NextApiResponse } from 'next';
 import { safeAPI } from '../base';
 import {
   ARTICLE_LARK_BASE_ID,
-  ARTICLE_LARK_TABLE_ID,
+  ARTICLE_I18N_LARK_TABLE_ID,
   makeFilter,
   getBITableList,
 } from '../../../models/Lark';
@@ -18,6 +18,8 @@ export type BaseArticle = Record<
   | 'license'
   | 'type'
   | 'tags'
+  | 'kId'
+  | 'langCode'
   | 'summary'
   | 'image'
   | 'publishedAt'
@@ -26,10 +28,20 @@ export type BaseArticle = Record<
   TableCellValue
 >;
 
+export type BaseArticleI18n = Record<
+  | 'id'
+  | 'tags'
+  | 'alias'
+  | 'kId'
+  | 'langs'
+  | 'articles',
+  TableCellValue
+>;
+
 export default safeAPI(
   async (
     { method, url },
-    response: NextApiResponse<TableRecordList<BaseArticle>['data']>,
+    response: NextApiResponse<TableRecordList<BaseArticleI18n>['data']>,
   ) => {
     switch (method) {
       case 'GET': {
@@ -37,9 +49,9 @@ export default safeAPI(
           url!,
         ) as DataObject;
 
-        const pageData = await getBITableList<BaseArticle>({
+        const pageData = await getBITableList<BaseArticleI18n>({
           database: ARTICLE_LARK_BASE_ID,
-          table: ARTICLE_LARK_TABLE_ID,
+          table: ARTICLE_I18N_LARK_TABLE_ID,
           page_size,
           page_token,
           filter: makeFilter(filter),

@@ -5,6 +5,7 @@ import { safeAPI } from './base';
 import {
   ARTICLE_LARK_BASE_ID,
   ARTICLE_LARK_TABLE_ID,
+  ARTICLE_I18N_LARK_TABLE_ID,
   getBITableList,
   LARK_BITABLE_GROUP_ID,
   LARK_BITABLE_MEMBERS_ID,
@@ -13,17 +14,18 @@ import {
   LARK_BITABLE_ID,
   makeFilter,
 } from '../../models/Lark';
-import { BaseArticle } from './article';
+import { BaseArticle, BaseArticleI18n } from './article';
 import { Member } from '../../models/Member';
 import { Group } from '../../models/Group';
 import { Organization } from '../../models/Organization';
 import type { Activity } from '../../pages/api/activity';
+import { ArticleI18n, getArticleI18nList, normalizeArray } from '../../models/ArticleI18n';
 
 export type SearchQuery = Partial<Record<'keywords' | 'tag', string>>;
 
 export interface SearchResult {
   activities: Activity[],
-  articles: BaseArticle[];
+  articles: ArticleI18n[];
   members: Member[];
   groups: Group[];
   organizations: Organization[];
@@ -35,23 +37,24 @@ export default safeAPI(
       case 'GET': {
         const { keywords, tag } = parseURLData(url) as SearchQuery;
         const keywordList = keywords?.split(/\s+/);
-
+        var articlesI18n: ArticleI18n[] = []
         if (keywordList || tag)
           var [
-            { items: articles },
+            { items: articlesI18nItems },
             { items: activities },
             { items: groups },
             { items: organizations },
           ] = await Promise.all([
-            getBITableList<BaseArticle>({
+            getBITableList<BaseArticleI18n>({
               database: ARTICLE_LARK_BASE_ID,
-              table: ARTICLE_LARK_TABLE_ID,
+              table: ARTICLE_I18N_LARK_TABLE_ID,
               filter: makeFilter(
                 {
-                  title: keywordList,
+                  // title: keywordList,
+                  aritclesText: keywordList,
                   author: keywordList,
-                  tags: tag,
-                  summary: keywordList,
+                  tagsText: tag,
+                  // summary: keywordList,
                   alias: keywordList,
                 },
                 'OR',
@@ -111,10 +114,27 @@ export default safeAPI(
             ),
           });
 
+          // @ts-ignore
+         if(articlesI18nItems){
+          const ArticleKIdsData:Record<string,BaseArticleI18n> = {}
+          const ArticleKids: string[] = [];
+          articlesI18nItems.map(item=>{
+            ArticleKids.push(item.fields.kId as string)
+            item.fields.langs = normalizeArray(item.fields.langs);
+            ArticleKIdsData[item.fields.kId as string] = item.fields
+          })
+          const { items:articleData } = await getBITableList<BaseArticle>({
+            database: ARTICLE_LARK_BASE_ID,
+            table: ARTICLE_LARK_TABLE_ID,
+            filter: makeFilter({ kId: ArticleKids }, 'OR'),
+          });
+         // @ts-ignore
+          articlesI18n = getArticleI18nList(articleData,ArticleKids,ArticleKIdsData)
+         }
         response.json({
           articles:
             // @ts-ignore
-            articles?.map(({ id, fields }) => ({ ...fields, id: id! })) || [],
+            articlesI18n || [],
           activities:
             // @ts-ignore
             activities?.map(({ id, fields }) => ({...fields, id: id! })) || [],

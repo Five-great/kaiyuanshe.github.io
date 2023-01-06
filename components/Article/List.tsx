@@ -6,9 +6,9 @@ import { ScrollListProps } from 'mobx-restful-table';
 import { XScrollList } from '../ScrollList';
 import { ArticleCard } from './Card';
 import { BaseArticle } from '../../pages/api/article';
-import { Article, ArticleModel } from '../../models/Article';
+import { ArticleI18n, ArticleI18nModel, getArticleList } from '../../models/ArticleI18n';
 
-export type ArticleListProps = ScrollListProps<Article>;
+export type ArticleListProps = ScrollListProps<ArticleI18n>;
 
 export const ArticleListLayout: FC<{ data: BaseArticle[] }> = ({ data }) => (
   <Row as="section" xs={1} sm={2} xl={3} xxl={4} className="g-3 my-4">
@@ -22,15 +22,13 @@ export const ArticleListLayout: FC<{ data: BaseArticle[] }> = ({ data }) => (
 
 @observer
 export class ArticleList extends XScrollList<ArticleListProps> {
-  store = new ArticleModel();
+  store = new ArticleI18nModel();
 
   constructor(props: ArticleListProps) {
     super(props);
-
     this.boot();
   }
-
   renderList() {
-    return <ArticleListLayout data={this.store.allItems} />;
+    return <ArticleListLayout data={getArticleList(this.store.allItems)} />;
   }
 }

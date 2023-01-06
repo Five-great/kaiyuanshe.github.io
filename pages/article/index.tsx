@@ -5,15 +5,13 @@ import { Container } from 'react-bootstrap';
 
 import PageHead from '../../components/PageHead';
 import { ArticleList } from '../../components/Article/List';
-import articleStore from '../../models/Article';
+import articleI18nStore from '../../models/ArticleI18n';
 import { i18n } from '../../models/Translation';
 import { withTranslation } from '../api/base';
 
 export const getServerSideProps = withTranslation(async () => {
-  articleStore.clear();
-
-  const list = await articleStore.getList({}, 1);
-
+  articleI18nStore.clear();
+  const list = await articleI18nStore.getList({}, 1,6)
   return { props: { list } };
 });
 
@@ -21,7 +19,6 @@ const ArticleListPage: FC<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = observer(({ list }) => {
   const { t } = i18n;
-
   return (
     <Container className="py-5">
       <PageHead title={t('our_blogs')} />

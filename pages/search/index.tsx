@@ -13,11 +13,11 @@ import systemStore from '../../models/System';
 import { i18n } from '../../models/Translation';
 import { withRoute, withTranslation } from '../api/base';
 import { SearchResult } from '../api/search';
+import { getArticleList } from '../../models/ArticleI18n';
 
 export const getServerSideProps = withTranslation(
   withRoute<{}, SearchResult>(async ({ query }) => {
     const props = await systemStore.search(query);
-
     return {
       props: JSON.parse(JSON.stringify(props)),
     };
@@ -27,14 +27,15 @@ export const getServerSideProps = withTranslation(
 const SearchPage: FC<InferGetServerSidePropsType<typeof getServerSideProps>> =
   observer(({ articles, activities, members, groups, organizations }) => {
     const { t } = i18n;
-
+    const articlesList = getArticleList(articles)
+    
     return (
       <Container className="my-5">
         <h1 className="text-center">{t('search_results')}</h1>
 
         <h2>{t('article')}</h2>
 
-        <ArticleListLayout data={articles} />
+        <ArticleListLayout data={articlesList} />
 
         <h2>{t('activity')}</h2>
 

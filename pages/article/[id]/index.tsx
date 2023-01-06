@@ -5,16 +5,18 @@ import Giscus from '@giscus/react';
 
 import PageHead from '../../../components/PageHead';
 import ArticleRecommend from '../../../components/Article/Recommend';
-import articleStore, { Article } from '../../../models/Article';
-import { withErrorLog } from '../../api/base';
+import articleI18nStore, { Article} from '../../../models/ArticleI18n';
+// import articleStore, {  } from '../../../models/Article';
+import { withErrorLog, withTranslation } from '../../api/base';
+import { i18n } from '../../../models/Translation';
 
-export const getServerSideProps = withErrorLog<{ id: string }, Article>(
+export const getServerSideProps = withErrorLog<{ id: string ,}, Article>(withTranslation(
   async ({ params }) => {
-    const props = await articleStore.getOne(params!.id);
-
-    return { props };
+    const props = await articleI18nStore.getArticleOne(params!.id,i18n.currentLanguage);
+  
+    return { props: props as Article};
   },
-);
+));
 
 export default class ArticleDetailPage extends PureComponent<
   InferGetServerSidePropsType<typeof getServerSideProps>

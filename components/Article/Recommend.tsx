@@ -4,7 +4,7 @@ import { Spinner } from 'react-bootstrap';
 
 import { ArticleCard } from './Card';
 import { BaseArticle } from '../../pages/api/article';
-import articleStore, { Article } from '../../models/Article';
+import articleI18nStore, { Article, getArticleList } from '../../models/ArticleI18n';
 import { i18n } from '../../models/Translation';
 
 export interface ArticleRecommendProps extends Pick<Article, 'alias'> {
@@ -17,13 +17,14 @@ export default class ArticleRecommend extends PureComponent<
   { list: BaseArticle[] }
 > {
   componentDidMount() {
-    articleStore.getRecommendList(this.props.alias + '');
+    articleI18nStore.getRecommendList(this.props.alias + '',i18n.currentLanguage);
   }
 
   render() {
     const { className } = this.props,
-      { downloading, currentRecommend } = articleStore,
+      { downloading, currentRecommend } = articleI18nStore,
       { t } = i18n;
+      const currentRecommendList = getArticleList(currentRecommend)
 
     return (
       <aside className={className}>
@@ -38,7 +39,7 @@ export default class ArticleRecommend extends PureComponent<
             )}
           </div>
         ) : (
-          currentRecommend.map(item => (
+          currentRecommendList.map(item => (
             <ArticleCard key={item.id + ''} className="mt-3" {...item} />
           ))
         )}

@@ -9,7 +9,7 @@ import { ArticleListLayout } from '../components/Article/List';
 import { CityStatisticMap } from '../components/CityStatisticMap';
 
 import { i18n } from '../models/Translation';
-import articleStore, { Article } from '../models/Article';
+import articleI18nStore, { ArticleI18n, getArticleList } from '../models/ArticleI18n';
 import groupStore, { Group } from '../models/Group';
 import activityStore from '../models/Activity';
 
@@ -18,12 +18,12 @@ import { slogan } from './api/home';
 import { DefaultImage, fileURLOf } from './api/lark/file/[id]';
 
 export const getServerSideProps = withTranslation(async () => {
-  const articles = await articleStore.getList({}, 1, 3),
+  const articles = await articleI18nStore.getList({}, 1, 3),
     projects = await groupStore.getAll({ type: '项目' });
 
   return {
     props: {
-      articles: JSON.parse(JSON.stringify(articles)) as Article[],
+      articles: JSON.parse(JSON.stringify(articles)) as ArticleI18n[],
       projects: JSON.parse(JSON.stringify(projects)) as Group[],
     },
   };
@@ -55,7 +55,7 @@ export default class HomePage extends PureComponent<
   render() {
     const { articles, projects } = this.props,
       { t } = i18n;
-
+      const articleList = getArticleList(articles)
     return (
       <>
         <PageHead />
@@ -108,7 +108,7 @@ export default class HomePage extends PureComponent<
           <section>
             <h2 className="text-center text-primary">{t('latest_news')}</h2>
             <p className="text-center text-muted">{t('slogan')}</p>
-            <ArticleListLayout data={articles} />
+            <ArticleListLayout data={articleList} />
           </section>
 
           <section>
