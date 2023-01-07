@@ -67,10 +67,12 @@ export class ArticleI18nModel extends Stream<ArticleI18n>(ListModel) {
   currentRecommend: ArticleI18n[] = [];
 
   async *openStream(filter: NewData<BaseArticleI18n>) {
+    
     for await (const { total, items } of createListStream<BaseArticleI18n>(
       this.client,
       this.baseURI,
       filter,
+      40
     )) {
       this.totalCount = total;
 
@@ -109,7 +111,7 @@ export class ArticleI18nModel extends Stream<ArticleI18n>(ListModel) {
   @toggle('downloading')
   async getRecommendList(alias: string,langCode:string) {
     const { body } = await this.client.get<BaseArticleI18n[]>(
-      `${this.baseURI}/${alias}/recommend?lang=${langCode}`,
+      `${this.baseURI}/${alias}/recommend?lang=${langCode}&page_size=6`,
     );
     return (this.currentRecommend = body! as unknown as ArticleI18n[]);
   }

@@ -16,7 +16,9 @@ export default safeAPI(
   async ({ method, query }, response: NextApiResponse<BaseArticleI18n[]>) => {
     switch (method) {
       case 'GET': {
-        const article = await getOneArticle(query.alias + '', query.lang+'');
+
+        const { alias, lang, page_size } = query
+        const article = await getOneArticle(alias + '', lang+'');
 
         if (!article) return response.status(404);
 
@@ -25,17 +27,19 @@ export default safeAPI(
         const { items } = await getBITableList<BaseArticleI18n>({
           database: ARTICLE_LARK_BASE_ID,
           table: ARTICLE_I18N_LARK_TABLE_ID,
+          page_size: parseInt(page_size+''),
           filter: makeFilter({tagsText: tags},'OR'),
         })
-        
+   
         const ArticleKIdsData:Record<string,BaseArticleI18n> = {}
           const ArticleKids: string[] = [];
+         
           items.map(item=>{
             ArticleKids.push(item.fields.kId as string)
             item.fields.langs = normalizeArray(item.fields.langs);
             ArticleKIdsData[item.fields.kId as string] = item.fields
           })
-
+          
           const { items:articleData } = await getBITableList<BaseArticle>({
             database: ARTICLE_LARK_BASE_ID,
             table: ARTICLE_LARK_TABLE_ID,

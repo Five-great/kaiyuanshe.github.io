@@ -48,13 +48,12 @@ export default safeAPI(
             getBITableList<BaseArticleI18n>({
               database: ARTICLE_LARK_BASE_ID,
               table: ARTICLE_I18N_LARK_TABLE_ID,
+              page_size: 40,
               filter: makeFilter(
                 {
-                  // title: keywordList,
                   aritclesText: keywordList,
                   author: keywordList,
                   tagsText: tag,
-                  // summary: keywordList,
                   alias: keywordList,
                 },
                 'OR',

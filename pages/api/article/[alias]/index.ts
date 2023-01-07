@@ -35,6 +35,7 @@ export async function getOneArticle(alias: string,langCode:string) {
     table: ARTICLE_LARK_TABLE_ID,
     filter: makeFilter({ alias,langCode: langCode },"AND"),
   });
+  
   return items&&items.find(({ fields }) => fields.alias === alias);
 }
 

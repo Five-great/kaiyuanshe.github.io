@@ -100,13 +100,14 @@ export async function* createListStream<T extends DataObject>(
   client: RESTClient,
   path: string,
   filter?: NewData<T>,
+  page_size?: number,
 ) {
   var baseTable = RouteTableMap[path as keyof typeof RouteTableMap],
     lastPage = '';
 
   do {
     const query = {
-      page_size: 100,
+      page_size: page_size || 100,
       page_token: lastPage,
     };
 

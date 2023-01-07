@@ -11,7 +11,7 @@ import { withTranslation } from '../api/base';
 
 export const getServerSideProps = withTranslation(async () => {
   articleI18nStore.clear();
-  const list = await articleI18nStore.getList({}, 1,6)
+  const list = await articleI18nStore.getList({}, 1,8)
   return { props: { list } };
 });
 
